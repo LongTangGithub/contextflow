@@ -3,18 +3,28 @@
 @theme {
   --color-background: oklch(100% 0 0);
   --color-foreground: oklch(9% 0 0);
-  --color-primary: oklch(47.41% 0.11 265.75);
+  --color-card: oklch(100% 0 0);
+  --color-card-foreground: oklch(9% 0 0);
+  --color-primary: oklch(9% 0 0);
   --color-primary-foreground: oklch(98% 0 0);
+  --color-muted: oklch(96% 0 0);
+  --color-muted-foreground: oklch(45% 0 0);
+  --color-border: oklch(90% 0 0);
 }
 
-.dark {
+/* .dark {
   @theme {
     --color-background: oklch(9% 0 0);
     --color-foreground: oklch(98% 0 0);
+    --color-card: oklch(9% 0 0);
+    --color-card-foreground: oklch(98% 0 0);
     --color-primary: oklch(98% 0 0);
-    --color-primary-foreground: oklch(47.41% 0.11 265.75);
+    --color-primary-foreground: oklch(9% 0 0);
+    --color-muted: oklch(15% 0 0);
+    --color-muted-foreground: oklch(65% 0 0);
+    --color-border: oklch(20% 0 0);
   }
-}
+} */
 
 @layer base {
   * {
