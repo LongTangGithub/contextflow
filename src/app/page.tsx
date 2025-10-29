@@ -4,8 +4,18 @@ import { useState } from "react";
 import DocumentUpload from "@/components/features/document-upload/DocumentUpload";
 import DocumentList from "@/components/features/document-list/DocumentList";
 
+// CHANGE: Moved document types definition to share with components
+interface Document {
+  id: string;
+  name: string;
+  size: number;
+  uploadedAt: Date;
+  type: string;
+}
+
 export default function Home() {
-  const [documents] = useState([
+  // CHANGE: Use state setter to enable deletion
+  const [documents, setDocuments] = useState<Document[]>([
     {
       id: "1",
       name: "React Documentation.pdf",
@@ -29,6 +39,11 @@ export default function Home() {
     },
   ]);
 
+  // CHANGE: Handler to delete document by id
+  const handleDeleteDocument = (id: string) => {
+    setDocuments((prev) => prev.filter((doc) => doc.id !== id));
+  };
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-6 md:p-16 bg-background">
       <div className="text-center mb-12">
@@ -43,7 +58,9 @@ export default function Home() {
 
       <div className="w-full max-w-4xl mx-auto space-y-12">
         <DocumentUpload />
-        <DocumentList documents={documents} />
+
+        {/* CHANGE: Pass delete handler to DocumentList */}
+        <DocumentList documents={documents} onDelete={handleDeleteDocument} />
       </div>
     </main>
   );
