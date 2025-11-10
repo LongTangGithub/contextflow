@@ -3,12 +3,13 @@
 import type React from "react";
 import { useState } from "react";
 import { Upload, X, AlertCircle } from "lucide-react";
+import { useToast } from "@/lib/toast-context";
 
 export default function DocumentUpload() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
-
-  // TODO: Create a function that validates the file
+  const { addToast } = useToast();
+  
   const validateFile = (file: File): string | null => {
     const allowedFileTypes = ["application/pdf", "text/plain", "text/markdown"];
     const maxFileSize = 10 * 1024 * 1024; // 10 MB
@@ -24,24 +25,27 @@ export default function DocumentUpload() {
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // TODO: Clear any error  when user tries to upload new file
+    
     setError(null);
 
     const file = event.target.files?.[0];
-    if (file) {
-      // TODO: Call validateFile before setting the file
+    if (file) {      
       const validationError = validateFile(file);
-
-      // TODO: if there's an error, set the error state and don't set the file
+ 
       if (validationError) {
         setError(validationError);
+
+        addToast(validationError, 'error');
         return;
       }
 
-      // TODO: If valid, clear any existing errors
       setError(null);
-
       setSelectedFile(file);
+      addToast(
+        "File uploaded successfully!", 
+        "success",
+        `${file.name} (${(file.size / 1024).toFixed(2)} KB)` 
+      );
     }
   };
 
