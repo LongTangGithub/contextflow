@@ -9,7 +9,7 @@ export default function DocumentUpload() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { addToast } = useToast();
-  
+
   const validateFile = (file: File): string | null => {
     const allowedFileTypes = ["application/pdf", "text/plain", "text/markdown"];
     const maxFileSize = 10 * 1024 * 1024; // 10 MB
@@ -25,41 +25,64 @@ export default function DocumentUpload() {
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    
     setError(null);
 
     const file = event.target.files?.[0];
-    if (file) {      
+    if (file) {
       const validationError = validateFile(file);
- 
+
       if (validationError) {
         setError(validationError);
 
-        addToast(validationError, 'error');
+        addToast('Upload failed', 'error', {
+          description: validationError,
+          duration: 6000,
+          sound: true,
+          actions: [
+            {
+              label: 'Retry',
+              onClick: () => {
+                const input = document.getElementById('file-upload') as HTMLInputElement;
+                if (input) input.click();
+              }
+            }
+          ]
+        });
         return;
       }
 
       setError(null);
       setSelectedFile(file);
-      addToast(
-        "File uploaded successfully!", 
-        "success",
-        `${file.name} (${(file.size / 1024).toFixed(2)} KB)` 
-      );
+      addToast("File uploaded successfully!", "success", {
+        description: `${file.name} (${(file.size / 1024).toFixed(2)} KB)`,
+        sound: true,
+        actions: [
+          {
+            label: 'Undo',
+            onClick: () => {
+              setSelectedFile(null);
+              addToast('Upload cancelled', 'info', {
+                description: 'The file has been removed',
+                duration: 3000
+              });
+            }
+          }
+        ]
+      });
     }
-  };
+  };  // ← handleFileChange closes here
 
+  // ← Component return starts here!
   return (
     <div className="w-full max-w-2xl mx-auto">
       <div
         className={`
-        border-2 border-dashed rounded-xl p-12 text-center transition-all duration-200
-        ${
-          error
+          border-2 border-dashed rounded-xl p-12 text-center transition-all duration-200
+          ${error
             ? "border-red-500 bg-red-500/5"
             : "border-border hover:border-primary/40 bg-card"
-        }
-      `}
+          }
+        `}
       >
         <div className="mb-6">
           <div className="mx-auto w-16 h-16 rounded-full bg-muted flex items-center justify-center">
@@ -89,11 +112,9 @@ export default function DocumentUpload() {
           </p>
         </div>
 
-        {/* TODO: Show error message if error exists */}
         {error && (
           <div className="mt-4 p-3 bg-red-500/10 border border-red-500/50 rounded-lg flex items-center gap-2">
             <AlertCircle className="w-4 h-4 text-red-500" />
-
             <p className="text-sm text-red-500">{error}</p>
           </div>
         )}
