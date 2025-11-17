@@ -4,14 +4,37 @@ import { createContext, useContext, useState, type ReactNode } from "react";
 
 export interface Toast {
   id: string;
-  type: "success" | "error" | "info";
+  type: "success" | "error" | "warning" | "info";
   message: string;
   description?: string;
+  duration?: number;
+  position?: ToastPosition;
+  pauseOnHover?: boolean;
+  actions?: ToastAction[];
+  sound?: boolean; 
+}
+
+export type ToastPosition = "top-left" | "top-right" | "bottom-left" | "bottom-right";
+
+export interface ToastAction {
+  label: string;
+  onClick: () => void;
 }
 
 interface ToastContextType {
   toasts: Toast[];
-  addToast: (message: string, type: Toast["type"], description?: string) => void;
+  addToast: (
+    message: string, 
+    type: Toast["type"], 
+    options?: {
+      description?: string;
+      duration?: number;
+      position?: ToastPosition;
+      pauseOnHover?: boolean;
+      actions?: ToastAction[];
+      sound?: boolean;
+    }
+  ) => void;
   removeToast: (id: string) => void;
 }
 
@@ -33,13 +56,25 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   const addToast = (
     message: string,
     type: Toast["type"],
-    description?: string,
+    options?: {
+      description?: string;
+      duration?: number;
+      position?: ToastPosition;
+      pauseOnHover?: boolean;
+      actions?: ToastAction[];
+      sound?: boolean
+    }
   ) => {
     const newToast: Toast = {
       id: generateToastId(),
       message,
       type,
-      description,
+      description: options?.description,
+      duration: options?.duration ?? 5000,
+      position: options?.position ?? "top-right",
+      pauseOnHover: options?.pauseOnHover ?? true,
+      actions: options?.actions,
+      sound: options?.sound ?? false,
     };
 
     setToasts((prevToasts) => [...prevToasts, newToast]);
