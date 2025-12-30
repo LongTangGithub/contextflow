@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import DocumentUpload from "@/components/features/document-upload/DocumentUpload";
-import DocumentList from "@/components/features/document-list/DocumentList";
+import DocumentManager from "@/components/features/document-manager/DocumentManager";
 
 // CHANGE: Moved document types definition to share with components
 interface Document {
@@ -57,10 +56,7 @@ export default function Home() {
       </div>
 
       <div className="w-full max-w-4xl mx-auto space-y-12">
-        <DocumentUpload />
-
-        {/* CHANGE: Pass delete handler to DocumentList */}
-        <DocumentList documents={documents} onDelete={handleDeleteDocument} />
+        <DocumentManager />
       </div>
     </main>
   );
