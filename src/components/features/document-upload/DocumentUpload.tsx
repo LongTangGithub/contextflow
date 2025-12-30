@@ -10,7 +10,11 @@ interface UploadedFile {
   id: string;
 }
 
-export default function DocumentUpload() {
+interface DocumentUploadProps {
+  onUploadComplete?: (files: File[]) => void;
+}
+
+export default function DocumentUpload({ onUploadComplete }: DocumentUploadProps) {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [errors, setErrors] = useState<Map<string, string>>(new Map());
@@ -119,6 +123,12 @@ export default function DocumentUpload() {
     // Show success toast if any files succeeded
     if (validCount > 0) {
       const totalSize = validFiles.reduce((sum, uf) => sum + uf.file.size, 0);
+
+      // Call the parent component's onUploadComplete callback
+      if (onUploadComplete) {
+        onUploadComplete(validFiles.map((uf) => uf.file));
+      }
+
       addToast(
         `${validCount} file${validCount > 1 ? "s" : ""} uploaded successfully`,
         "success",
@@ -127,36 +137,28 @@ export default function DocumentUpload() {
           duration: 5000,
           sound: true,
           pauseOnHover: true,
-          actions: [
-            {
-              label: "Undo",
-              onClick: () => {
-                setUploadedFiles((prev) =>
-                  prev.filter((uf) => !validFiles.map((vf) => vf.id).includes(uf.id))
-                );
-                addToast("Upload cancelled", "info", {
-                  description: "Files have been removed",
-                  duration: 3000,
-                });
-              },
-            },
-          ],
         }
       );
+
+      // Clear the preview after successful upload
+      setUploadedFiles([]);
+      setErrors(new Map());
+
+      // Reset the file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    } else {
+      setErrors(newErrors);
+      setUploadedFiles((prev) => [...prev, ...validFiles]);
     }
 
-    setErrors(newErrors);
-    setUploadedFiles((prev) => [...prev, ...validFiles]);
     setIsDragging(false);
     dragCounter.current = 0;
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     processFiles(event.target.files);
-    // Reset input so same file can be selected again
-    if (event.target) {
-      event.target.value = "";
-    }
   };
 
   // ============================================
