@@ -1,8 +1,8 @@
 # ContextFlow Project Status
 
-**Last Updated:** 2025-01-06  
-**Current Phase:** Week 1 - Database Infrastructure  
-**Active Branch:** `develop`
+**Last Updated:** 2026-01-06
+**Current Phase:** Week 1 - Document Processing Pipeline
+**Active Branch:** `ContextFlow-08/db-schema-update`
 
 ---
 
@@ -20,7 +20,7 @@
 
 ### **Completed Features**
 
-#### ✅ Phase 0: UI Foundation (Completed Dec 30, 2024)
+#### ✅ Phase 0: UI Foundation (Completed Dec 30, 2025)
 - [x] Document upload component with drag-and-drop
 - [x] File validation (PDF, TXT, MD only, max 10MB)
 - [x] Document list with filtering (All, PDF, TXT, MD)
@@ -36,11 +36,11 @@
 - `feat(toast): implement complete toast notification system`
 - `refactor: connect upload component to document list`
 
-#### ✅ Phase 1: Database Infrastructure (Completed Jan 6, 2025)
+#### ✅ Phase 1: Database Infrastructure (Completed Jan 6, 2026)
 - [x] PostgreSQL 16 with pgvector extension (v0.8.1)
 - [x] Docker Compose setup on port 5433
 - [x] Database schema with 3 tables:
-  - `documents` - File metadata tracking
+  - `documents` - File metadata tracking (updated with extracted_text and metadata columns)
   - `document_chunks` - Text segments storage
   - `embeddings` - 1536-dimensional vectors
 - [x] HNSW vector index for similarity search
@@ -48,6 +48,7 @@
 - [x] Comprehensive test suite (8 automated tests)
 - [x] Foreign key cascade deletes
 - [x] Auto-updating timestamps
+- [x] Schema extended for text extraction support (extracted_text TEXT, metadata JSONB)
 
 **Key Metrics:**
 - All 8 database tests passing ✅
@@ -71,13 +72,18 @@
 **Goal:** Extract text from uploaded files and prepare for embedding generation
 
 **Tasks:**
-- [ ] Install PDF parsing library (pdf-parse)
+- [x] Update database schema to support extracted text and metadata
+- [ ] Install PDF parsing library (pdf-parse or pdfjs-dist)
 - [ ] Implement PDF text extraction
 - [ ] Handle TXT and MD file reading
 - [ ] Create document chunking strategy
 - [ ] Determine optimal chunk size (target: 500-1000 tokens)
 - [ ] Store chunks in `document_chunks` table
 - [ ] Update document processing_status enum
+
+**Recent Progress:**
+- ✅ Added `extracted_text` (TEXT) column to documents table
+- ✅ Added `metadata` (JSONB) column to documents table
 
 **Blockers:**
 - ⚠️ OpenAI API key not acquired yet (needed for embeddings in next phase)
@@ -241,6 +247,10 @@ docker exec -it contextflow-postgres psql -U contextflow -d contextflow
 3. **HNSW index** - Better accuracy than IVFFlat, handles dynamic inserts well
 4. **Three-table schema** - Normalized design, enables efficient cascade deletes
 5. **Docker Compose locally** - Full control, zero cost, better for learning
+6. **Schema Update (Jan 6, 2026)** - Added `extracted_text` (TEXT) and `metadata` (JSONB) columns to `documents` table:
+   - `extracted_text` stores processed document content (unlimited length)
+   - `metadata` uses JSONB for efficient querying vs plain JSON
+   - Both nullable to support gradual data population during processing
 
 ### **Deferred Decisions:**
 - ORM selection (Drizzle vs Prisma vs raw SQL)
@@ -267,12 +277,13 @@ docker exec -it contextflow-postgres psql -U contextflow -d contextflow
 
 **When starting a new conversation with Claude:**
 
-1. **Current Phase:** Week 1, Day 3 - Implementing text extraction
-2. **Last Completed:** Database infrastructure with pgvector
-3. **Next Step:** Install pdf-parse and extract text from uploaded PDFs
+1. **Current Phase:** Week 1, Day 3-4 - Document processing pipeline setup
+2. **Last Completed:** Database schema update with extracted_text and metadata columns
+3. **Next Step:** Implement PDF text extraction and chunking logic
 4. **Key Context:**
    - PostgreSQL running on port 5433
-   - Schema has 3 tables ready for data
+   - Schema has 3 tables with extended documents table (extracted_text, metadata)
+   - Ready for text extraction implementation
    - OpenAI API key still needed (Week 1, Day 4-5)
 
 **Quick Orientation:**
