@@ -12,7 +12,8 @@
     "db:logs": "cd docker && docker compose logs -f postgres",
     "db:reset": "cd docker && docker compose down -v && docker compose up -d",
     "db:test": "tsx src/lib/db/test-db.ts",
-    "db:pgadmin": "cd docker && docker compose --profile tools up -d"
+    "db:pgadmin": "cd docker && docker compose --profile tools up -d",
+    "pdf:test": "tsx src/lib/pdf/test-extractor.ts"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +25,7 @@
     "clsx": "^2.1.1",
     "lucide-react": "^0.548.0",
     "next": "^16.0.0",
+    "pdfjs-dist": "^5.4.530",
     "pg": "^8.16.3",
     "postcss": "^8.5.6",
     "react": "^19.2.0",
