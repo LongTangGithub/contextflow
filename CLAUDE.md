@@ -139,6 +139,8 @@ The project uses **Tailwind CSS v4** with the new `@theme` directive in `globals
 
 ## Development Workflow
 
+> **Note**: Detailed workflow rules are in `.ai/systems/workflow.md` - including Context7 MCP usage, PRD checklist reference, and tool selection priorities.
+
 ### When Adding New Features
 
 1. **Toast Notifications**: Always use `useToast()` for user feedback instead of creating local notification state
