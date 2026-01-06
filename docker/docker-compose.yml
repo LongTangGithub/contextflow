@@ -1,0 +1,40 @@
+services: 
+  postgres: 
+    image: pgvector/pgvector:pg16
+    container_name: contextflow-postgres
+    restart: unless-stopped
+    ports:
+      - "5433:5432" # External port 5433 to avoid conflict with existing Postgres
+    environment:
+      POSTGRES_USER : contextflow
+      POSTGRES_PASSWORD: contextflow@106737
+      POSTGRES_DB: contextflowdb
+    volumes: 
+      # Persist data
+      - postgres_data:/var/lib/postgresql/data
+      #Run initialization script
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    healthcheck: 
+      test: ["CMD-SHELL", "pg_isready -U contextflow -d contextflowdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  
+  # Optional: pgAdmin for database management
+  pgadmin: 
+    image: dpage/pgadmin4:latest
+    container_name: contextflow-pgadmin
+    restart: unless-stopped
+    ports: 
+      - "5050:80"
+    environment: 
+      PGADMIN_DEFAULT_EMAIL: long.tang628@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: contextflow@106737
+    depends_on: 
+    - postgres
+    profiles:
+    - tools     # Only starts if you run: docker compose --profile tools up
+
+volumes:
+  postgres_data:
+    driver: local
