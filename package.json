@@ -13,7 +13,8 @@
     "db:reset": "cd docker && docker compose down -v && docker compose up -d",
     "db:test": "tsx src/lib/db/test-db.ts",
     "db:pgadmin": "cd docker && docker compose --profile tools up -d",
-    "pdf:test": "tsx src/lib/pdf/test-extractor.ts"
+    "pdf:test": "tsx src/lib/pdf/test-extractor.ts",
+    "queue:test": "tsx src/lib/queue/test-queue.ts"
   },
   "keywords": [],
   "author": "",
