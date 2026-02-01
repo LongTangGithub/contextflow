@@ -14,7 +14,9 @@
     "db:test": "tsx src/lib/db/test-db.ts",
     "db:pgadmin": "cd docker && docker compose --profile tools up -d",
     "pdf:test": "tsx src/lib/pdf/test-extractor.ts",
-    "queue:test": "tsx src/lib/queue/test-queue.ts"
+    "queue:test": "tsx src/lib/queue/test-queue.ts",
+    "worker": "tsx src/workers/document-processor.ts",
+    "worker:dev": "tsx watch src/workers/document-processor.ts"
   },
   "keywords": [],
   "author": "",
